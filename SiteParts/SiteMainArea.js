@@ -26,7 +26,22 @@ class SiteMainArea {
 
     setOnChatMessage() {
         TwitchController.AddTwitchMessageCallback("PRIVMSG", (message) => {
+            let messageLower = message.message.toLowerCase();
+            
+            //  Print out the message to show we've received it
             console.log("PRIVMSG: ", message);
+
+            //  Check for !help commands. If any response is required, send each message separated by a short timer.
+            let helpResponse = parseHelpCommand(messageLower);
+            if (helpResponse.success) {
+                let sendHelpResponse = null;
+                sendHelpResponse = (helpResponse) => {
+                    TwitchController.SendChatMessage(channel, helpResponse.reply[0]);
+                    helpResponse.reply.shift();
+                    if (sendHelpResponse && (helpResponse.reply.length !== 0)) { setTimeout(() => sendHelpResponse(helpResponse), 500); }
+                };
+                sendHelpResponse(helpResponse);
+            }
         });
     }
 

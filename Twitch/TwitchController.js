@@ -22,10 +22,9 @@ class TwitchController {
         twitchChat.say(sendChannel, sendMessage);
     }
 
-    static async Connect(twitchChannel, twitchBotUsername, twitchToken) {
+    static async Connect(twitchChannel, twitchToken) {
         //  Store off the given channel, username, and token
         channel = twitchChannel.toLowerCase();
-        username = twitchBotUsername;
         token = twitchToken;
 
         // Instantiate the TwitchJS objects
@@ -41,10 +40,13 @@ class TwitchController {
         twitchChat.on(TwitchJs.Chat.Events.ALL, this.handleTwitchMessage);
         
         //  Connect and save off our personal username
-        let connectResult = await twitchChat.connect();
-        if (!connectResult) { console.warn("Failed to connect to twitch channel!"); return false; }
-        if (!twitchChat._userState) { console.warn("Invalid user state returned when connecting to channel!"); return false; }
-        myUsername = twitchChat._userState.username;
+        try {
+            let connectResult = await twitchChat.connect();
+            if (!connectResult) { console.warn("Failed to connect to twitch channel!"); return false; }
+            if (!twitchChat._userState) { console.warn("Invalid user state returned when connecting to channel!"); return false; }
+            myUsername = twitchChat._userState.username;
+        }
+        catch (error) { console.error(error); return false; }
 
         TwitchController.AddTwitchMessageCallback("MSG_RATELIMIT", () => {
             //  If we hit the message rate limit, try to resend the same message again in 500ms
@@ -62,7 +64,7 @@ class TwitchController {
         if (twitchMessageCallbacks.hasOwnProperty(message.event)) { if (twitchMessageCallbacks[message.event](message)) return; }
 
         switch (message.event) {
-            case "PING":                        if (message.channel === "tmi.twitch.tv") TwitchController.SendChatMessage("tmi.twitch.tv", "PONG");                 break;
+            case "PING":                            if (message.channel === "tmi.twitch.tv") TwitchController.SendChatMessage("tmi.twitch.tv", "PONG");                 break;
             case "PONG":
             case "CAP":                 
             case "001":
@@ -87,6 +89,8 @@ class TwitchController {
             case "HOST_TARGET_WENT_OFFLINE":        if (SHOW_LOW_LEVEL_MESSAGES) console.log("HOST TARGET OFFLINE: " + message.message + " on " + message.username);    break;
             case "USER_BANNED":                     if (SHOW_LOW_LEVEL_MESSAGES) console.log("USER BANNED: " + message.username);                                       break;
             case "MSG_DUPLICATE":                   if (SHOW_LOW_LEVEL_MESSAGES) console.log("MESSAGE DUPLICATE");                                                      break;
+            case "FOLLOWERS_ON":                    if (SHOW_LOW_LEVEL_MESSAGES) console.log("FOLLOWERS_ON");                                                           break;
+            case "FOLLOWERS_OFF":                   if (SHOW_LOW_LEVEL_MESSAGES) console.log("FOLLOWERS_OFF");                                                          break;
 
             case "WHISPER":                         if (SHOW_WHISPER_MESSAGES) console.log("WHISPER from " + message.username + ": " + message.message);                break;
 
@@ -103,6 +107,7 @@ class TwitchController {
             case "DISCONNECTED":                    if (SHOW_PROBLEM_MESSAGES) console.log("DISCONNECTED");                                                             break;
             case "ERROR_ENCOUNTERED":               if (SHOW_PROBLEM_MESSAGES) console.log("ERROR ENCOUNTERED");                                                        break;
             case "CLEARMSG":                        if (SHOW_PROBLEM_MESSAGES) console.log("CLEARMSG: " + message.username);                                            break;
+            case "AUTHENTICATION_FAILED":           if (SHOW_PROBLEM_MESSAGES) console.log("AUTHENTICATION_FAILED: " + message.username);                               break;
 
             default:                                if (SHOW_UNHANDLED_MESSAGES) console.log("UNHANDLED:", message);                                                    break;
         }

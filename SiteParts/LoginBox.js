@@ -6,12 +6,12 @@ class LoginBox {
     }
 
     generateContent() {
-        let container = new Container({ id: "LoginBox", style: styleConfig.SiteLoginBox, });
+        let container = new Container({ id: "LoginBox", style: { backgroundColor: "rgb(64, 64, 64)", borderRadius: "8px", border: "1px solid rgb(120, 120, 120)", position: "absolute", maxWidth: "800px", top: "25%", left: "50%", transform: "translate(-50%, -50%)", }, });
 
-        let siteLoginBoxContainer = new Container({ id: "SiteLoginBoxContainer", style: styleConfig.SiteLoginBoxContainer });
+        let siteLoginBoxContainer = new Container({ id: "SiteLoginBoxContainer", style: { width: "0px", height: "0px", position: "relative", }, });
         container.appendChild(siteLoginBoxContainer.content);
 
-        let siteLoginLogoutBox = new Container({ id: "SiteLoginLogoutBox", style: styleConfig.SiteLoginBox });
+        let siteLoginLogoutBox = new Container({ id: "SiteLoginLogoutBox", style: { backgroundColor: "rgb(64, 64, 64)", borderRadius: "8px", border: "1px solid rgb(120, 120, 120)", position: "absolute", maxWidth: "800px", top: "25%", left: "50%", transform: "translate(-50%, -50%)", }, });
         siteLoginBoxContainer.appendChild(siteLoginLogoutBox.content);
 
         this.loadTwitchLoginInput(siteLoginLogoutBox);
