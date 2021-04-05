@@ -11,6 +11,8 @@ const SHOW_SUPPORT_MESSAGES = true;
 const SHOW_PROBLEM_MESSAGES = true;
 const SHOW_UNHANDLED_MESSAGES = true;
 
+let myUsername = "";
+
 class TwitchController {
     constructor() {}
 
@@ -23,7 +25,7 @@ class TwitchController {
     }
 
     static async Connect(twitchChannel, twitchToken) {
-        //  Store off the given channel, username, and token
+        //  Store off the given channel, and token
         channel = twitchChannel.toLowerCase();
         token = twitchToken;
 

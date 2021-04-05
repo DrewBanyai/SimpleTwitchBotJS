@@ -1,18 +1,24 @@
+//  The TwitchJS library requires that these variables be named "token" and channel"
+//  You can generate a token here: https://twitchapps.com/tmi/
+let token = (SETTINGS && SETTINGS.TWITCH_DATA && SETTINGS.TWITCH_DATA.TOKEN) ? SETTINGS.TWITCH_DATA.TOKEN : null;
+let username = (SETTINGS && SETTINGS.TWITCH_DATA && SETTINGS.TWITCH_DATA.USERNAME) ? SETTINGS.TWITCH_DATA.USERNAME : null
+let channel = (SETTINGS && SETTINGS.TWITCH_DATA && SETTINGS.TWITCH_DATA.CHANNEL) ? SETTINGS.TWITCH_DATA.CHANNEL : null;
+
 let LoadSiteContent = async () => {
     loadSiteHeader();
     loadSiteMainArea();
-	checkAutoLogin();
+	attemptAutoLogin();
 };
 
 let SITE_HEADER = null;
 let SITE_MAIN_AREA = null;
 
-let getStorageTSSP = () => {
+let getLocalStorage = () => {
 	let storageTSSP = localStorage.getItem('SimpleTwitchBotJS');
-	return (storageTSSP ? JSON.parse(storageTSSP) : { channelName: "", oauth: "", folderPath: "" });
+	return (storageTSSP ? JSON.parse(storageTSSP) : {});
 }
 
-let setStorageTSSP = (storageData) => {
+let setLocalStorage = (storageData) => {
 	localStorage.setItem("SimpleTwitchBotJS", JSON.stringify(storageData));
 }
 
@@ -28,14 +34,12 @@ let loadSiteMainArea = () => {
 	document.body.appendChild(SITE_MAIN_AREA.content);
 };
 
-let checkAutoLogin = async () => {
-	if (!URL_OPTIONS || !URL_OPTIONS.autoLogin) { return; }
+let attemptAutoLogin = async () => {
 	if (!token || !channel) { return; }
 
 	let connectResult = await TwitchController.Connect(channel, token);
 	if (!connectResult) { console.warn("Failed to connect with given channel name and oauth token. Please try again."); return; }
 
 	//  Move to the next program state
-	SITE_HEADER.removeLoginHeaderButton();
 	SITE_MAIN_AREA.ShowMainAreaUI(connectResult);
 };

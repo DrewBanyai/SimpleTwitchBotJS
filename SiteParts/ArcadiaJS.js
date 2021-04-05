@@ -12,7 +12,7 @@ class Container {
 
     applyOptions(options) {
 		//  Generic options application
-		this.content.id = (options && options.id) ? options.id : (this.content.id ? this.content.id : "Container");
+		if (options && options.id) this.content.id = options.id;
 		if (options && options.attributes) { for (let key in options.attributes) { this.content[key] = options.attributes[key] } }
         if (options && options.style) { for (let key in options.style) { this.content.style[key] = options.style[key] } }
         if (options && options.events) { for (let key in options.events) { this.content.addEventListener(key, options.events[key]); } }
@@ -31,8 +31,6 @@ class DropDown {
 	}
 	
 	GenerateContent() {
-		if (!this.options.id) { this.options.id = "DropDown"; }
-
         let container = document.createElement("select");
 		container.setValues = (array) => this.setValues(array);
 		return container;
@@ -40,7 +38,7 @@ class DropDown {
 
     applyOptions(options) {
 		//  Generic options application
-		this.content.id = (options && options.id) ? options.id : (this.content.id ? this.content.id : "Container");
+		if (options && options.id) this.content.id = options.id;
 		if (options && options.attributes) { for (let key in options.attributes) { this.content[key] = options.attributes[key] } }
         if (options && options.style) { for (let key in options.style) { this.content.style[key] = options.style[key] } }
         if (options && options.events) { for (let key in options.events) { this.content.addEventListener(key, options.events[key]); } }
@@ -72,7 +70,7 @@ class FileInput {
         this.content = this.generateContent();
 
 		//  Generic options application
-		this.content.id = (options && options.id) ? options.id : "FileInput";
+		if (options && options.id) this.content.id = options.id;
 		if (options && options.attributes) { for (let key in options.attributes) { this.content[key] = options.attributes[key] } }
 		if (options && options.style) { for (let key in options.style) { this.content.style[key] = options.style[key] } }
     }
@@ -100,11 +98,12 @@ class Fontawesome {
     constructor(options) {
         this.options = options;
         this.content = this.generateContent();
+        
+		if (options && options.id) this.content.id = options.id;
     }
 
     generateContent() {
         let container = new Container({
-            id: (this.options && this.options.id) ? this.options.id : "FontAwesome",
             attributes: {
                 className: (this.options && this.options.attributes && this.options.attributes.className) ? this.options.attributes.className : "far fa-question-circle",
             },
@@ -130,8 +129,6 @@ class Image {
 	}
 	
 	generateContent() {
-		if (!this.options.id) { this.options.id = "Image"; }
-
         let container = document.createElement("img");
 		container.setValue = (text) => this.setValue(text);
 		return container;
@@ -139,7 +136,7 @@ class Image {
 
     applyOptions(options) {
 		//  Generic options application
-		this.content.id = (options && options.id) ? options.id : (this.content.id ? this.content.id : "Container");
+		if (options && options.id) this.content.id = options.id;
 		if (options && options.attributes) { for (let key in options.attributes) { this.content[key] = options.attributes[key] } }
         if (options && options.style) { for (let key in options.style) { this.content.style[key] = options.style[key] } }
         if (options && options.events) { for (let key in options.events) { this.content.addEventListener(key, options.events[key]); } }
@@ -158,8 +155,6 @@ class Label {
 	}
 	
 	generateContent() {
-		if (!this.options.id) { this.options.id = "Label"; }
-
 		let container = new Container(this.options);
 		container.content.setValue = (text) => this.setValue(text);
 		return container.content;
@@ -167,7 +162,7 @@ class Label {
 
     applyOptions(options) {
 		//  Generic options application
-		this.content.id = (options && options.id) ? options.id : (this.content.id ? this.content.id : "Container");
+		if (options && options.id) this.content.id = options.id;
 		if (options && options.attributes) { for (let key in options.attributes) { this.content[key] = options.attributes[key] } }
         if (options && options.style) { for (let key in options.style) { this.content.style[key] = options.style[key] } }
         if (options && options.events) { for (let key in options.events) { this.content.addEventListener(key, options.events[key]); } }
@@ -184,11 +179,12 @@ class Modal {
     constructor(options) {
         this.options = options;
         this.content = this.generateContent();
+
+		if (options && options.id) this.content.id = options.id;
     }
 
     generateContent() {
         let container = new Container({
-            id: (this.options && this.options.id) ? this.options.id : "Modal",
             style: {
                 width: "100%",
                 height: "100%",
@@ -204,7 +200,6 @@ class Modal {
         container.content.addEventListener('mousedown', (e) => { if (e.srcElement === container.content) { return this.closeDialog(); } });
 
         let centerPopup = new Container({
-            id: "CenterPopup",
             style: {
                 position: "fixed",
                 top: (this.options && this.options.topOverride) ? this.options.topOverride : "50%",
@@ -236,6 +231,8 @@ class PrimaryButton {
 		this.content = this.GenerateContent();
 
 		this.ButtonTextLabel.setValue(this.content.value);
+
+		if (options && options.id) this.content.id = options.id;
 	}
 	
 	GenerateContent() {
@@ -244,7 +241,6 @@ class PrimaryButton {
 		
 		//  Create the main button, a rounded box
 		this.ButtonElement = new Container({
-			id: this.options.id,
 			style: {
 				width: "200px",
 				height: "25px",
@@ -256,7 +252,6 @@ class PrimaryButton {
 		this.ButtonElement.applyOptions(this.options);
 		
 		this.ButtonGradient = new Container({
-			id: this.options.id + "ButtonGradient",
 			style: {
 				width: "100%",
 				height: "100%",
@@ -269,7 +264,6 @@ class PrimaryButton {
 		
 		//  Create a centered label on the button
 		this.ButtonTextLabel = new Label({
-			id: this.options.id + "ButtonText",
 			attributes: { value: "" },
 			style: {
 				fontFamily: "'Titillium Web', sans-serif",
@@ -328,7 +322,7 @@ class TextInput {
 
     applyOptions(options) {
 		//  Generic options application
-		this.content.id = (options && options.id) ? options.id : (this.content.id ? this.content.id : "TextInput");
+		if (options && options.id) this.content.id = options.id;
 		if (options && options.attributes) { for (let key in options.attributes) { this.content[key] = options.attributes[key] } }
         if (options && options.style) { for (let key in options.style) { this.content.style[key] = options.style[key] } }
         if (options && options.events) { for (let key in options.events) { this.content.addEventListener(key, options.events[key]); } }
@@ -353,13 +347,13 @@ class Checkbox {
 
         if (this.options.clickCallback) { this.clickCallback = this.options.clickCallback; }
 
-        this.elements.exteriorBox = new Container({ id: "CheckboxExteriorBox", style: { borderRadius: "3px", border: "1px solid rgb(0, 0, 0)", cursor: "pointer", }, });
+        this.elements.exteriorBox = new Container({ style: { borderRadius: "3px", border: "1px solid rgb(0, 0, 0)", cursor: "pointer", }, });
         this.elements.exteriorBox.content.onclick = () => {
             this.setChecked(!this.checked);
             if (this.options.clickCallback) { this.options.clickCallback(this.checked); }
         };
 
-        this.elements.interiorSymbol = new Fontawesome({ id: "CheckboxInteriorSymbol", style: { textAlign: "center", position: "relative", }, });
+        this.elements.interiorSymbol = new Fontawesome({ style: { textAlign: "center", position: "relative", }, });
         this.elements.exteriorBox.appendChild(this.elements.interiorSymbol.content);
 
         this.setChecked((this.options.checked === true));
@@ -415,7 +409,7 @@ class Checkbox {
 
     applyOptions(options) {
 		//  Generic options application
-		this.content.id = (options && options.id) ? options.id : (this.content.id ? this.content.id : "Checkbox");
+		if (options && options.id) this.content.id = options.id;
 		if (options && options.attributes) { for (let key in options.attributes) { this.content[key] = options.attributes[key] } }
         if (options && options.style) { for (let key in options.style) { this.content.style[key] = options.style[key] } }
         if (options && options.events) { for (let key in options.events) { this.content.addEventListener(key, options.events[key]); } }
