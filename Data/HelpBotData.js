@@ -1,15 +1,16 @@
 const helpBotOptions = { raidTrigger: false };
+const helpCommand = "!help";
 
 let parseHelpCommand = (message) => {
-    let isHelpCommand = (message.substr(0, 5) === "!help");
-    if (!isHelpCommand) { return { success: false, reason: "Message is a !help command", reply: [ "Failed to parse help command." ] }; }
+    let isHelpCommand = (message.substr(0, helpCommand.length) === helpCommand);
+    if (!isHelpCommand) { return { success: false, reason: "Message is a " + helpCommand + " command", reply: [ "Failed to parse help command." ] }; }
 
-    if (message === "!help" || message === "!help ") {
-        return { success: true, reply: [ "HELP: SimpleTwitchBotJS (that's me!) is a simple way to implement a Javascript Chat Bot in your Twitch channel. Ask me about a specific subject by using the command '!help SUBJECT'. For a list of help subjects, type '!help subjects'" ] };
+    if (message === helpCommand || message === helpCommand + " ") {
+        return { success: true, reply: [ "HELP: SimpleTwitchJSBot (that's me!) is a simple way to implement a Javascript Chat Bot in your Twitch channel. Ask me about a specific subject by using the command '" + helpCommand + " SUBJECT'. For a list of help subjects, type '" + helpCommand + " subjects'" ] };
     }
 
-    let hasSubject = (message.substr(0, 6) === "!help ") && (message.length > 6);
-    if (!hasSubject) { return { success: false, reason: "!help command is improperly formatted", reply: [ "Failed to parse help command." ] }; }
+    let hasSubject = (message.substr(0, 6) === (helpCommand + " ")) && (message.length > 6);
+    if (!hasSubject) { return { success: false, reason: helpCommand + " command is improperly formatted", reply: [ "Failed to parse help command." ] }; }
     let helpSubject = message.substr(6, message.length - 6).toLowerCase();
     
     switch (helpSubject) {
@@ -22,8 +23,8 @@ let parseHelpCommand = (message) => {
 
         case "help":
             return { success: true, reply: [
-                "If you need to implement a simple helper bot that answers questions, check HelpBotData.js in the project to see how !help messages are processed.",
-                "Basically, the script checks if the message begins with '!help' and from there processes responses based on the keywords that follow.",
+                "If you need to implement a simple helper bot that answers questions, check HelpBotData.js in the project to see how " + helpCommand + " messages are processed.",
+                "Basically, the script checks if the message begins with '" + helpCommand + "' and from there processes responses based on the keywords that follow.",
             ], };
 
         case "channel":
@@ -49,7 +50,7 @@ let parseHelpCommand = (message) => {
         case "url vars":
             return { success: true, reply: [
                 "If you want to use this by loading it through OBS or just save yourself some time loading it normally, you can use URL variables. These are channel, token, username, and autoLogin.",
-                "Check the details of each by using !help and then the term... but in general, your URL will look like this:",
+                "Check the details of each by using " + helpCommand + " and then the term... but in general, your URL will look like this:",
                 "PROJECT_FOLDER/index.htm?channel=DrewTheBear&token=asoifnasifnicnasihf3975rfqa89vansf&username=BrigsbyBot&autoLogin=true",
             ], };
 

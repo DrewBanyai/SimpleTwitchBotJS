@@ -31,7 +31,7 @@ class SiteMainArea {
             //  Print out the message to show we've received it
             console.log("PRIVMSG: ", message);
 
-            //  Check for !help commands. If any response is required, send each message separated by a short timer.
+            //  Check for help commands. If any response is required, send each message separated by a short timer.
             let helpResponse = parseHelpCommand(messageLower);
             if (helpResponse.success) {
                 let sendHelpResponse = null;
