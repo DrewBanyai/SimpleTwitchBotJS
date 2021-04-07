@@ -1,4 +1,3 @@
-const helpBotOptions = { raidTrigger: false };
 const helpCommand = "!help";
 
 let parseHelpCommand = (message) => {
